@@ -1,23 +1,12 @@
 const internModel = require("../models/internModel")
-const mongoose = require('mongoose')
 const collegeModel = require("../models/collegeModel")
 
 // --------------------------- Regex for email and mobile ---------------------
 
 const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
 const mobileRegex = /^[6-9]\d{9}$/
-// const nameRegex = /^[a-zA-Z]{1,20}$/
 const nameRegex = /^[ a-z ]+$/i
 
-
-// ---------------------------- Validation -------------------------------------
-
-const objectValue = function (value) {
-    if (typeof value === undefined || value === null) return false    //|| typeof value === Number
-    if (typeof value === "string" && value.trim().length === 0) return false
-    if (typeof value === Number) return false
-    return true
-}
 
 // -------------------------- CREATE Intern -----------------------------
 
@@ -25,21 +14,19 @@ const createIntern = async function (req, res) {
     try {
         if (Object.keys(req.query).length == 0) {
             const internData = req.body
-            internData.name = internData.name.trim()
+            
             const { name, email, mobile, collegeName } = internData
-            //console.log(internData)
 
             if (Object.keys(internData).length == 0) {
                 return res.status(400).send({ status: false, msg: "Please Provide Data" })
             }
-
+            
             if (!internData.name) {
                 return res.status(400).send({ status: false, msg: "Please Provide Name" })
             }
-
-            // if (!objectValue(internData.name)) {
-            //     return res.status(400).send({ status: false, msg: "Please Provide valid Name" })
-            // }
+            
+            internData.name = internData.name.trim()
+           
             if (!internData.name.match(nameRegex)) {
                 return res.status(400).send({ status: false, msg: "Please Provide correct input for name" })
             }
